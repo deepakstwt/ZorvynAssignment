@@ -50,7 +50,7 @@ export default function LedgerPage() {
     if (savedState !== null) {
       setIsSidebarCollapsed(savedState === 'true');
     }
-  }, [fetchLedgerData]);
+  }, [fetchLedgerData, refreshCounter]);
 
   const toggleSidebar = () => {
     const newState = !isSidebarCollapsed;

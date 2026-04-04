@@ -65,7 +65,7 @@ export default function DashboardPage() {
     if (savedState !== null) {
       setIsSidebarCollapsed(savedState === 'true');
     }
-  }, [fetchDashboardData]);
+  }, [fetchDashboardData, refreshCounter]);
 
   const toggleSidebar = () => {
     const newState = !isSidebarCollapsed;
