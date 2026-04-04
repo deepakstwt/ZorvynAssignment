@@ -136,7 +136,7 @@ export default function LedgerPage() {
                  </span>
               </div>
               <div className="h-8 px-4 rounded-full bg-white border border-slate-100 shadow-sm flex items-center justify-center text-[9px] font-black text-slate-900 cursor-pointer hover:border-indigo-200 transition-all uppercase tracking-widest leading-none">
-                ADMIN
+                {userRole}
               </div>
            </div>
         </header>

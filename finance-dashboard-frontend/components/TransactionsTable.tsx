@@ -201,7 +201,7 @@ export default function TransactionsTable({
                 <td className={`px-8 py-5 text-right text-xs font-black tracking-tight ${t.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
                   {t.type === 'income' ? '+' : '-'}₹{t.amount.toLocaleString('en-IN')}
                 </td>
-                {userRole === 'admin' && !showViewAll && (
+                {userRole?.toLowerCase() === 'admin' && !showViewAll && (
                   <td className="px-8 py-5 text-right">
                     <div className="flex items-center justify-end gap-2 transition-opacity">
                       <button 

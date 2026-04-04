@@ -16,20 +16,22 @@ import { UserRole } from '../../users/schemas/user.schema';
 export class FinanceController {
   constructor(private readonly financeService: FinanceService) {}
 
-  @ApiOperation({ summary: 'Create a new financial record' })
+  @ApiOperation({ summary: 'Create a new financial record (Admin Only)' })
   @ApiResponse({ status: 201, description: 'Record successfully created' })
-  @ApiResponse({ status: 403, description: 'Forbidden - Requires Admin or Analyst role' })
+  @ApiResponse({ status: 403, description: 'Forbidden - Requires Admin' })
   @Post()
   @UseGuards(RolesGuard)
-  @Roles(UserRole.ADMIN, UserRole.ANALYST)
+  @Roles(UserRole.ADMIN)
   async createTransaction(@CurrentUser() user: any, @Body() dto: CreateTransactionDto) {
     return this.financeService.createTransaction(user.userId, dto);
   }
 
-  @ApiOperation({ summary: 'Get records or export to CSV' })
+  @ApiOperation({ summary: 'Get records or export to CSV (Admin/Analyst Only)' })
   @ApiQuery({ name: 'export', required: false, type: Boolean })
   @ApiResponse({ status: 200, description: 'Returns records or a CSV file' })
   @Get()
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN, UserRole.ANALYST)
   async getTransactions(
     @Query() query: QueryTransactionDto,
     @Query('export') exportFlag: string,
@@ -49,6 +51,9 @@ export class FinanceController {
   @ApiOperation({ summary: 'Update an existing record (Admin Only)' })
   @ApiResponse({ status: 200, description: 'Record successfully updated' })
   @ApiResponse({ status: 403, description: 'Forbidden - Requires Admin role' })
+  @Patch(':id')
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.ADMIN)
   async updateTransaction(
     @CurrentUser() user: any,
     @Param('id') id: string,

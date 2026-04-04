@@ -1,0 +1,226 @@
+"use client";
+
+import { useEffect, useState } from 'react';
+import api from '@/lib/api';
+import toast from 'react-hot-toast';
+
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
+export default function UsersTable() {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  const fetchUsers = async () => {
+    try {
+      const res = await api.get('/users');
+      setUsers(res.data);
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to load users');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const handleRoleChange = async (id: string, newRole: string) => {
+    try {
+      await api.patch(`/users/${id}/role`, { role: newRole });
+      toast.success('User role updated');
+      fetchUsers();
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to update role');
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this user?')) return;
+    try {
+      await api.delete(`/users/${id}`);
+      toast.success('User deleted');
+      fetchUsers();
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to delete user');
+    }
+  };
+
+  const downloadCSV = () => {
+    const headers = ['Name', 'Email', 'Role'];
+    const rows = users.map(u => [u.name, u.email, u.role]);
+    const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `zorvyn_users_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success('User list downloaded');
+  };
+
+  const filteredUsers = users.filter(u => 
+    u.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    u.email?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const currentItems = filteredUsers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  if (loading) return <div>Loading...</div>;
+
+  return (
+    <div className="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-sm">
+      {/* Table Header */}
+      <div className="px-8 py-8 border-b border-slate-50 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <h2 className="text-lg font-black text-slate-900 uppercase tracking-tighter">WORKSPACE ACCESS</h2>
+          <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-1">Manage team roles and privileges</p>
+        </div>
+
+        <div className="flex items-center gap-4">
+           {/* Search Bar */}
+           <div className="relative group">
+              <input 
+                type="text" 
+                placeholder="Find member..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="bg-slate-50 border border-slate-100 pl-10 pr-4 py-2.5 rounded-2xl text-[9px] font-black uppercase tracking-widest text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-100 hover:border-slate-300 transition-all w-64 shadow-sm"
+              />
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-hover:text-indigo-500 transition-colors">
+                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              </div>
+           </div>
+
+           {/* Export Button */}
+           <button 
+             onClick={downloadCSV}
+             className="bg-white border border-slate-900 px-5 py-2.5 rounded-2xl flex items-center gap-2.5 shadow-sm text-slate-900 hover:bg-slate-900 hover:text-white transition-all active:scale-95"
+           >
+             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+             <span className="text-[9px] font-black uppercase tracking-widest leading-none">Download CSV</span>
+           </button>
+        </div>
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="bg-slate-50/50">
+              <th className="px-8 py-4 text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 border-b border-slate-100">TEAM MEMBER</th>
+              <th className="px-8 py-4 text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 border-b border-slate-100">EMAIL ADDRESS</th>
+              <th className="px-8 py-4 text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 border-b border-slate-100">ROLE</th>
+              <th className="px-8 py-4 text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 border-b border-slate-100 text-right">ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-50">
+            {currentItems.map((u) => (
+              <tr key={u._id} className="group hover:bg-slate-50/30 transition-colors">
+                <td className="px-8 py-5">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-slate-900 flex items-center justify-center text-white text-[10px] font-black">
+                      {u.name?.charAt(0).toUpperCase()}
+                    </div>
+                    <p className="text-xs font-black text-slate-800 tracking-tight uppercase">{u.name}</p>
+                  </div>
+                </td>
+                <td className="px-8 py-5">
+                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{u.email}</p>
+                </td>
+                <td className="px-8 py-5">
+                   <div className="relative inline-block">
+                     <select 
+                       value={u.role}
+                       onChange={(e) => handleRoleChange(u._id, e.target.value)}
+                       className="appearance-none bg-slate-50 border border-slate-200 px-4 py-2 pr-8 rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-100 hover:border-indigo-200 transition-all cursor-pointer shadow-sm"
+                     >
+                       <option value="admin">Admin</option>
+                       <option value="analyst">Analyst</option>
+                       <option value="viewer">Viewer</option>
+                     </select>
+                     <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                     </div>
+                   </div>
+                </td>
+                <td className="px-8 py-5 text-right">
+                    <button 
+                      onClick={() => handleDelete(u._id)}
+                      className="p-3 text-slate-300 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all active:scale-90"
+                      title="Remove User"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                    </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="px-8 py-4 border-t border-slate-50 flex items-center justify-between">
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+            Showing {(currentPage-1)*itemsPerPage + 1} - {Math.min(currentPage*itemsPerPage, filteredUsers.length)} of {filteredUsers.length} members
+          </p>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              className="p-2 border border-slate-100 rounded-lg hover:bg-slate-50 disabled:opacity-30 transition-all"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <div className="flex items-center gap-1">
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentPage(i + 1)}
+                  className={`w-8 h-8 rounded-lg text-[10px] font-black transition-all ${currentPage === i + 1 ? 'bg-slate-900 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-50'}`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
+            <button 
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+              className="p-2 border border-slate-100 rounded-lg hover:bg-slate-50 disabled:opacity-30 transition-all"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+          </div>
+        </div>
+      )}
+      
+      {users.length === 0 && !loading && (
+        <div className="py-20 text-center space-y-3">
+          <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-300"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87"></path><path d="M16 3.13a4 4 0 010 7.75"></path></svg>
+          </div>
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">No other team members found</p>
+        </div>
+      )}
+    </div>
+  );
+}
