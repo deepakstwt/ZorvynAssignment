@@ -17,23 +17,27 @@ export class DashboardController {
   @ApiOperation({ summary: 'Get overall financial summary (Total Income, Expense, Balance)' })
   @Get('summary')
   async getSummary(@CurrentUser() user: any, @Query() query: QueryDashboardDto) {
-    return this.dashboardService.getSummary(user.userId, query);
+    const userId = user.userId || user.id;
+    return this.dashboardService.getSummary(userId, query);
   }
 
   @Get('categories')
   async getCategoryBreakdown(@CurrentUser() user: any, @Query() query: QueryDashboardDto) {
-    return this.dashboardService.getCategoryBreakdown(user.userId, query);
+    const userId = user.userId || user.id;
+    return this.dashboardService.getCategoryBreakdown(userId, query);
   }
 
   @Get('trends')
   async getMonthlyTrends(@CurrentUser() user: any, @Query() query: QueryDashboardDto) {
-    return this.dashboardService.getMonthlyTrends(user.userId, query);
+    const userId = user.userId || user.id;
+    return this.dashboardService.getMonthlyTrends(userId, query);
   }
 
   @ApiOperation({ summary: 'Get unified dashboard dataset (Summary + Categories + Trends) in a single request' })
   @Get('all')
   async getDashboardData(@CurrentUser() user: any, @Query() query: QueryDashboardDto) {
-    return this.dashboardService.getDashboardData(user.userId, query);
+    const userId = user.userId || user.id;
+    return this.dashboardService.getDashboardData(userId, query);
   }
 }
 

@@ -23,7 +23,8 @@ export class FinanceController {
   @UseGuards(RolesGuard)
   @Roles(UserRole.ADMIN)
   async createTransaction(@CurrentUser() user: any, @Body() dto: CreateTransactionDto) {
-    return this.financeService.createTransaction(user.userId, dto);
+    const userId = user.userId || user.id;
+    return this.financeService.createTransaction(userId, dto);
   }
 
   @ApiOperation({ summary: 'Get records or export to CSV (Admin/Analyst Only)' })
@@ -45,8 +46,9 @@ export class FinanceController {
       return res.send(csv);
     }
     
-    res.setHeader('X-API-Version', '2.0.0-private-mode');
-    const result = await this.financeService.getTransactions(user.userId, query);
+    res.setHeader('X-API-Version', '2.0.1-ultimate-privacy');
+    const userId = user.userId || user.id;
+    const result = await this.financeService.getTransactions(userId, query);
     return res.json(result);
   }
 
@@ -61,7 +63,8 @@ export class FinanceController {
     @Param('id') id: string,
     @Body() dto: UpdateTransactionDto,
   ) {
-    return this.financeService.updateTransaction(id, dto, user.userId);
+    const userId = user.userId || user.id;
+    return this.financeService.updateTransaction(id, dto, userId);
   }
 
   @ApiOperation({ summary: 'Soft delete a record (Admin Only)' })
@@ -71,6 +74,7 @@ export class FinanceController {
   @UseGuards(RolesGuard)
   @Roles(UserRole.ADMIN)
   async deleteTransaction(@CurrentUser() user: any, @Param('id') id: string) {
-    return this.financeService.deleteTransaction(id, user.userId);
+    const userId = user.userId || user.id;
+    return this.financeService.deleteTransaction(id, userId);
   }
 }
