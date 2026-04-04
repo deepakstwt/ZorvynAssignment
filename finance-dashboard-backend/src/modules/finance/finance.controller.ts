@@ -45,6 +45,7 @@ export class FinanceController {
       return res.send(csv);
     }
     
+    res.setHeader('X-API-Version', '2.0.0-private-mode');
     const result = await this.financeService.getTransactions(user.userId, query);
     return res.json(result);
   }
