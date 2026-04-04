@@ -3,6 +3,7 @@ import { ApiTags, ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagg
 import { SkipThrottle } from '@nestjs/throttler';
 import { DashboardService } from './dashboard.service';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { QueryDashboardDto } from './dto/query-dashboard.dto';
 
 @ApiTags('Dashboard Analytics')
@@ -15,24 +16,24 @@ export class DashboardController {
 
   @ApiOperation({ summary: 'Get overall financial summary (Total Income, Expense, Balance)' })
   @Get('summary')
-  async getSummary(@Query() query: QueryDashboardDto) {
-    return this.dashboardService.getSummary(query);
+  async getSummary(@CurrentUser() user: any, @Query() query: QueryDashboardDto) {
+    return this.dashboardService.getSummary(user.userId, query);
   }
 
   @Get('categories')
-  async getCategoryBreakdown(@Query() query: QueryDashboardDto) {
-    return this.dashboardService.getCategoryBreakdown(query);
+  async getCategoryBreakdown(@CurrentUser() user: any, @Query() query: QueryDashboardDto) {
+    return this.dashboardService.getCategoryBreakdown(user.userId, query);
   }
 
   @Get('trends')
-  async getMonthlyTrends(@Query() query: QueryDashboardDto) {
-    return this.dashboardService.getMonthlyTrends(query);
+  async getMonthlyTrends(@CurrentUser() user: any, @Query() query: QueryDashboardDto) {
+    return this.dashboardService.getMonthlyTrends(user.userId, query);
   }
 
   @ApiOperation({ summary: 'Get unified dashboard dataset (Summary + Categories + Trends) in a single request' })
   @Get('all')
-  async getDashboardData(@Query() query: QueryDashboardDto) {
-    return this.dashboardService.getDashboardData(query);
+  async getDashboardData(@CurrentUser() user: any, @Query() query: QueryDashboardDto) {
+    return this.dashboardService.getDashboardData(user.userId, query);
   }
 }
 

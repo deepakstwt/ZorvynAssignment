@@ -35,16 +35,17 @@ export class FinanceController {
   async getTransactions(
     @Query() query: QueryTransactionDto,
     @Query('export') exportFlag: string,
+    @CurrentUser() user: any,
     @Res() res: Express.Response,
   ) {
     if (exportFlag === 'true') {
-      const csv = await this.financeService.getTransactionsCsv(query);
+      const csv = await this.financeService.getTransactionsCsv(user.userId, query);
       res.setHeader('Content-Type', 'text/csv');
       res.setHeader('Content-Disposition', `attachment; filename=finance-records-${Date.now()}.csv`);
       return res.send(csv);
     }
     
-    const result = await this.financeService.getTransactions(query);
+    const result = await this.financeService.getTransactions(user.userId, query);
     return res.json(result);
   }
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Document, Types, Model } from 'mongoose';
 import { Transaction, TransactionDocument } from '../finance/schemas/transaction.schema';
 import { QueryDashboardDto } from './dto/query-dashboard.dto';
 
@@ -10,10 +10,13 @@ export class DashboardService {
     @InjectModel(Transaction.name) private readonly transactionModel: Model<TransactionDocument>
   ) {}
 
-  async getSummary(query: QueryDashboardDto) {
+  async getSummary(userId: string, query: QueryDashboardDto) {
     const { startDate, endDate } = query;
-    // SHARING DATA MODEL: aggregates all transactions regardless of creator.
-    const matchStage: Record<string, any> = { isDeleted: { $ne: true } };
+    // PRIVATE DATA MODEL: aggregates only the authenticated user's transactions.
+    const matchStage: Record<string, any> = { 
+      isDeleted: { $ne: true },
+      userId: new Types.ObjectId(userId)
+    };
 
     if (startDate || endDate) {
       matchStage.date = {};
@@ -48,10 +51,13 @@ export class DashboardService {
     };
   }
 
-  async getCategoryBreakdown(query: QueryDashboardDto) {
+  async getCategoryBreakdown(userId: string, query: QueryDashboardDto) {
     const { startDate, endDate } = query;
-    // SHARING DATA MODEL: shows all categories across the organization.
-    const matchStage: Record<string, any> = { isDeleted: { $ne: true } };
+    // PRIVATE DATA MODEL: shows only the authenticated user's categories.
+    const matchStage: Record<string, any> = { 
+      isDeleted: { $ne: true },
+      userId: new Types.ObjectId(userId)
+    };
 
     if (startDate || endDate) {
       matchStage.date = {};
@@ -82,9 +88,12 @@ export class DashboardService {
     return result || [];
   }
 
-  async getMonthlyTrends(query: QueryDashboardDto) {
+  async getMonthlyTrends(userId: string, query: QueryDashboardDto) {
     const { startDate, endDate, range = '6M' } = query;
-    const matchStage: Record<string, any> = { isDeleted: { $ne: true } };
+    const matchStage: Record<string, any> = { 
+      isDeleted: { $ne: true },
+      userId: new Types.ObjectId(userId)
+    };
 
     if (startDate || endDate) {
       matchStage.date = {};
@@ -134,9 +143,12 @@ export class DashboardService {
     return result;
   }
 
-  async getDashboardData(query: QueryDashboardDto) {
+  async getDashboardData(userId: string, query: QueryDashboardDto) {
     const { startDate, endDate, range = '6M' } = query;
-    const matchStage: Record<string, any> = { isDeleted: { $ne: true } };
+    const matchStage: Record<string, any> = { 
+      isDeleted: { $ne: true },
+      userId: new Types.ObjectId(userId)
+    };
 
     if (startDate || endDate) {
       matchStage.date = {};

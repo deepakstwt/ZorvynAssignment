@@ -28,9 +28,12 @@ export class FinanceService {
     return savedTransaction;
   }
 
-  async getTransactions(query: QueryTransactionDto, isExport = false) {
-    // SHARING DATA MODEL: all authenticated users see all transactions.
-    const filter: Record<string, any> = { isDeleted: false };
+  async getTransactions(userId: string, query: QueryTransactionDto, isExport = false) {
+    // PRIVATE DATA MODEL: users only see their own transactions.
+    const filter: Record<string, any> = { 
+      isDeleted: false,
+      userId: new Types.ObjectId(userId) 
+    };
 
     if (query.type) {
       filter.type = query.type;
@@ -84,10 +87,14 @@ export class FinanceService {
   }
 
   async updateTransaction(transactionId: string, dto: UpdateTransactionDto, performedBy: string) {
-    const transaction = await this.transactionModel.findById(transactionId).exec();
+    const transaction = await this.transactionModel.findOne({
+      _id: transactionId,
+      userId: performedBy,
+      isDeleted: false,
+    }).exec();
 
-    if (!transaction || transaction.isDeleted) {
-      throw new NotFoundException('Transaction not found');
+    if (!transaction) {
+      throw new NotFoundException('Transaction not found or unauthorized');
     }
 
     const updatedTransaction: any = await this.transactionModel
@@ -108,10 +115,14 @@ export class FinanceService {
   }
 
   async deleteTransaction(transactionId: string, performedBy: string) {
-    const transaction = await this.transactionModel.findById(transactionId).exec();
+    const transaction = await this.transactionModel.findOne({
+      _id: transactionId,
+      userId: performedBy,
+      isDeleted: false,
+    }).exec();
 
-    if (!transaction || transaction.isDeleted) {
-      throw new NotFoundException('Transaction not found');
+    if (!transaction) {
+      throw new NotFoundException('Transaction not found or unauthorized');
     }
 
     transaction.isDeleted = true;
@@ -123,8 +134,8 @@ export class FinanceService {
     return { message: 'Transaction successfully deleted' };
   }
 
-  async getTransactionsCsv(query: QueryTransactionDto): Promise<string> {
-    const { data } = await this.getTransactions(query, true);
+  async getTransactionsCsv(userId: string, query: QueryTransactionDto): Promise<string> {
+    const { data } = await this.getTransactions(userId, query, true);
     
     const fields = [
       { label: 'Date', value: (row: any) => new Date(row.date).toLocaleDateString() },
