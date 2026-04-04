@@ -20,13 +20,20 @@ export default function RegisterPage() {
     setLoading(true);
     setError('');
     try {
-      await api.post('/auth/register', { name, email, password, role });
+      // Ensure role is exactly what the backend enum expects (already is)
+      const data = { name, email, password, role };
+      console.log('[Register] Sending data:', data);
+      
+      const response = await api.post('/auth/register', data);
+      console.log('[Register] Success:', response.data);
       router.push('/login');
     } catch (err: any) {
+      console.error('[Register] Error:', err);
       if (err.response?.data?.message) {
-        setError(Array.isArray(err.response.data.message) ? err.response.data.message[0] : err.response.data.message);
+        const msg = err.response.data.message;
+        setError(Array.isArray(msg) ? msg[0] : msg);
       } else {
-        setError('Failed to register account. Please try again.');
+        setError('Failed to register account. Check your connection.');
       }
     } finally {
       setLoading(false);
