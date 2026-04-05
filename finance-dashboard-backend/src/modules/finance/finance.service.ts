@@ -15,10 +15,11 @@ export class FinanceService {
     private readonly auditLogService: AuditLogService
   ) {}
 
-  async createTransaction(userId: string, dto: CreateTransactionDto): Promise<TransactionDocument> {
+  async createTransaction(userId: string, organizationId: string, dto: CreateTransactionDto): Promise<TransactionDocument> {
     const transaction = new this.transactionModel({
       ...dto,
       userId,
+      organizationId: new Types.ObjectId(organizationId),
     });
     const savedTransaction = await transaction.save();
     
@@ -28,11 +29,11 @@ export class FinanceService {
     return savedTransaction;
   }
 
-  async getTransactions(userId: string, query: QueryTransactionDto, isExport = false) {
-    // PRIVATE DATA MODEL: users only see their own transactions.
+  async getTransactions(organizationId: string, query: QueryTransactionDto, isExport = false) {
+    // COLLABORATIVE DATA MODEL: users see all transactions in their organization.
     const filter: Record<string, any> = { 
       isDeleted: false,
-      userId: new Types.ObjectId(userId) 
+      organizationId: new Types.ObjectId(organizationId) 
     };
 
     if (query.type) {
@@ -86,15 +87,15 @@ export class FinanceService {
     };
   }
 
-  async updateTransaction(transactionId: string, dto: UpdateTransactionDto, performedBy: string) {
+  async updateTransaction(transactionId: string, dto: UpdateTransactionDto, organizationId: string) {
     const transaction = await this.transactionModel.findOne({
       _id: transactionId,
-      userId: performedBy,
+      organizationId: new Types.ObjectId(organizationId),
       isDeleted: false,
     }).exec();
 
     if (!transaction) {
-      throw new NotFoundException('Transaction not found or unauthorized');
+      throw new NotFoundException('Transaction not found or unauthorized for this organization');
     }
 
     const updatedTransaction: any = await this.transactionModel
@@ -114,15 +115,15 @@ export class FinanceService {
     };
   }
 
-  async deleteTransaction(transactionId: string, performedBy: string) {
+  async deleteTransaction(transactionId: string, organizationId: string) {
     const transaction = await this.transactionModel.findOne({
       _id: transactionId,
-      userId: performedBy,
+      organizationId: new Types.ObjectId(organizationId),
       isDeleted: false,
     }).exec();
 
     if (!transaction) {
-      throw new NotFoundException('Transaction not found or unauthorized');
+      throw new NotFoundException('Transaction not found or unauthorized for this organization');
     }
 
     transaction.isDeleted = true;
@@ -134,8 +135,8 @@ export class FinanceService {
     return { message: 'Transaction successfully deleted' };
   }
 
-  async getTransactionsCsv(userId: string, query: QueryTransactionDto): Promise<string> {
-    const { data } = await this.getTransactions(userId, query, true);
+  async getTransactionsCsv(organizationId: string, query: QueryTransactionDto): Promise<string> {
+    const { data } = await this.getTransactions(organizationId, query, true);
     
     const fields = [
       { label: 'Date', value: (row: any) => new Date(row.date).toLocaleDateString() },

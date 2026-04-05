@@ -24,7 +24,7 @@ export class FinanceController {
   @Roles(UserRole.ADMIN)
   async createTransaction(@CurrentUser() user: any, @Body() dto: CreateTransactionDto) {
     const userId = user.userId || user.id;
-    return this.financeService.createTransaction(userId, dto);
+    return this.financeService.createTransaction(userId, user.organizationId, dto);
   }
 
   @ApiOperation({ summary: 'Get records or export to CSV (Admin/Analyst Only)' })
@@ -40,15 +40,14 @@ export class FinanceController {
     @Res() res: Express.Response,
   ) {
     if (exportFlag === 'true') {
-      const csv = await this.financeService.getTransactionsCsv(user.userId, query);
+      const csv = await this.financeService.getTransactionsCsv(user.organizationId, query);
       res.setHeader('Content-Type', 'text/csv');
       res.setHeader('Content-Disposition', `attachment; filename=finance-records-${Date.now()}.csv`);
       return res.send(csv);
     }
     
-    res.setHeader('X-API-Version', '2.0.1-ultimate-privacy');
-    const userId = user.userId || user.id;
-    const result = await this.financeService.getTransactions(userId, query);
+    res.setHeader('X-API-Version', '3.0.0-collaborative-org');
+    const result = await this.financeService.getTransactions(user.organizationId, query);
     return res.json(result);
   }
 
@@ -63,8 +62,7 @@ export class FinanceController {
     @Param('id') id: string,
     @Body() dto: UpdateTransactionDto,
   ) {
-    const userId = user.userId || user.id;
-    return this.financeService.updateTransaction(id, dto, userId);
+    return this.financeService.updateTransaction(id, dto, user.organizationId);
   }
 
   @ApiOperation({ summary: 'Soft delete a record (Admin Only)' })
@@ -74,7 +72,6 @@ export class FinanceController {
   @UseGuards(RolesGuard)
   @Roles(UserRole.ADMIN)
   async deleteTransaction(@CurrentUser() user: any, @Param('id') id: string) {
-    const userId = user.userId || user.id;
-    return this.financeService.deleteTransaction(id, userId);
+    return this.financeService.deleteTransaction(id, user.organizationId);
   }
 }

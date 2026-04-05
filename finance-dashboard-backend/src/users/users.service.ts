@@ -16,8 +16,8 @@ export class UsersService {
     return newUser.save();
   }
 
-  async findAll(): Promise<UserDocument[]> {
-    return this.userModel.find({}, '-password').exec();
+  async findAll(organizationId: string): Promise<UserDocument[]> {
+    return this.userModel.find({ organizationId }, '-password').exec();
   }
 
   async updateRole(id: string, role: UserRole): Promise<UserDocument | null> {

@@ -10,12 +10,12 @@ export class DashboardService {
     @InjectModel(Transaction.name) private readonly transactionModel: Model<TransactionDocument>
   ) {}
 
-  async getSummary(userId: string, query: QueryDashboardDto) {
+  async getSummary(organizationId: string, query: QueryDashboardDto) {
     const { startDate, endDate } = query;
-    // PRIVATE DATA MODEL: aggregates only the authenticated user's transactions.
+    // COLLABORATIVE DATA MODEL: aggregates all transactions in the organization.
     const matchStage: Record<string, any> = { 
       isDeleted: { $ne: true },
-      userId: new Types.ObjectId(userId)
+      organizationId: new Types.ObjectId(organizationId)
     };
 
     if (startDate || endDate) {
@@ -51,12 +51,12 @@ export class DashboardService {
     };
   }
 
-  async getCategoryBreakdown(userId: string, query: QueryDashboardDto) {
+  async getCategoryBreakdown(organizationId: string, query: QueryDashboardDto) {
     const { startDate, endDate } = query;
-    // PRIVATE DATA MODEL: shows only the authenticated user's categories.
+    // COLLABORATIVE DATA MODEL: shows all categories in the organization.
     const matchStage: Record<string, any> = { 
       isDeleted: { $ne: true },
-      userId: new Types.ObjectId(userId)
+      organizationId: new Types.ObjectId(organizationId)
     };
 
     if (startDate || endDate) {
@@ -88,11 +88,11 @@ export class DashboardService {
     return result || [];
   }
 
-  async getMonthlyTrends(userId: string, query: QueryDashboardDto) {
+  async getMonthlyTrends(organizationId: string, query: QueryDashboardDto) {
     const { startDate, endDate, range = '6M' } = query;
     const matchStage: Record<string, any> = { 
       isDeleted: { $ne: true },
-      userId: new Types.ObjectId(userId)
+      organizationId: new Types.ObjectId(organizationId)
     };
 
     if (startDate || endDate) {
@@ -143,11 +143,11 @@ export class DashboardService {
     return result;
   }
 
-  async getDashboardData(userId: string, query: QueryDashboardDto) {
+  async getDashboardData(organizationId: string, query: QueryDashboardDto) {
     const { startDate, endDate, range = '6M' } = query;
     const matchStage: Record<string, any> = { 
       isDeleted: { $ne: true },
-      userId: new Types.ObjectId(userId)
+      organizationId: new Types.ObjectId(organizationId)
     };
 
     if (startDate || endDate) {

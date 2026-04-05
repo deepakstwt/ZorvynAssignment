@@ -50,6 +50,7 @@ export class AuthService {
     // Ensure the ID is a string for JWT signing - this prevents 500 errors
     const token = this.jwtService.sign({ 
       userId: user._id.toString(), 
+      organizationId: user.organizationId.toString(),
       role: user.role 
     });
 
