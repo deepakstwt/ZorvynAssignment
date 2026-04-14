@@ -1,4 +1,4 @@
-# Zorvyn: Financial Processing System Backend
+# CashFlowOS: Financial Processing System Backend
 [🏠 Back to Main Overview](../README.md)
 
 
@@ -30,7 +30,7 @@ The backend is built with a modular NestJS architecture, maintaining a clean sep
 ### 2. Environment Configuration
 Create a `.env` file in the `finance-dashboard-backend` directory:
 ```env
-MONGODB_URI=mongodb://localhost:27017/zorvyn
+MONGODB_URI=mongodb://localhost:27017/cashflowos
 JWT_SECRET=your_super_secret_jwt_key
 PORT=3000
 ```
@@ -86,7 +86,7 @@ The API is fully documented using the OpenAPI specification. Access the interact
 
 ## 👥 Invite-Based Onboarding & RBAC
 
-Zorvyn utilizes a secure, organization-centric onboarding flow governed by Role-Based Access Control (RBAC).
+CashFlowOS utilizes a secure, organization-centric onboarding flow governed by Role-Based Access Control (RBAC).
 
 ### **1. The Lifecycle**
 1. **Organization Creation**: An Admin registers *without* an invite code. The system automatically creates a new `organizationId` and a unique `inviteCode` for their workspace.

@@ -18,7 +18,7 @@ export class RegisterDto {
 
   @ApiProperty({ 
     description: 'The unique code provided by an administrator to join an existing organization.',
-    example: 'ZORVYN-88', 
+    example: 'CASHFLOWOS-88', 
     required: false 
   })
   @IsString()

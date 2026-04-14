@@ -26,7 +26,7 @@ export class User {
   @Prop({ default: true })
   isActive: boolean;
 
-  @Prop({ type: String, default: 'Zorvyn Financial' })
+  @Prop({ type: String, default: 'CashFlowOS Financial' })
   organizationName: string;
 
   @Prop({ type: Types.ObjectId, required: true })

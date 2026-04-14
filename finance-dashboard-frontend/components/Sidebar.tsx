@@ -61,7 +61,7 @@ export default function Sidebar({ userName, userRole, onLogout, isCollapsed, onT
              <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center shrink-0">
                 <div className="w-2.5 h-2.5 bg-white rounded-full"></div>
              </div>
-             <span className="text-xl font-black tracking-tighter text-slate-900 leading-none whitespace-nowrap">Zorvyn</span>
+             <span className="text-xl font-black tracking-tighter text-slate-900 leading-none whitespace-nowrap">CashFlowOS</span>
           </div>
         </div>
 

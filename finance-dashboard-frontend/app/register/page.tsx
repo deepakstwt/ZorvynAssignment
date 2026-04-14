@@ -193,7 +193,7 @@ function RegisterPageContent() {
                   disabled={isCodeLocked}
                   onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
                   className={`appearance-none block w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50/50 focus:bg-white text-gray-900 font-medium placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all shadow-sm tracking-widest selection:bg-black selection:text-white ${isCodeLocked ? 'opacity-60 cursor-not-allowed bg-gray-100' : ''}`}
-                  placeholder="ZORVYN-XXXX"
+                  placeholder="CASHFLOWOS-XXXX"
                 />
               </div>
               <p className="mt-2 text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none">

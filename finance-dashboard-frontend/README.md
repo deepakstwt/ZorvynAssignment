@@ -1,4 +1,4 @@
-# Zorvyn: Financial Dashboard Frontend
+# CashFlowOS: Financial Dashboard Frontend
 [🏠 Back to Main Overview](../README.md)
 
 
@@ -6,7 +6,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind%20CSS-blue)](#)
 [![Recharts](https://img.shields.io/badge/UI-Recharts-orange)](#)
 
-A modern, responsive financial dashboard built for high-level data visualization and management. This application interfaces with the Zorvyn Backend to provide real-time updates and seamless ledger management.
+A modern, responsive financial dashboard built for high-level data visualization and management. This application interfaces with the CashFlowOS Backend to provide real-time updates and seamless ledger management.
 
 ---
 
@@ -57,7 +57,7 @@ finance-dashboard-frontend/
 
 ## 👥 Invite-Based Onboarding & RBAC
 
-Zorvyn utilizes a secure, organization-centric onboarding flow governed by Role-Based Access Control (RBAC).
+CashFlowOS utilizes a secure, organization-centric onboarding flow governed by Role-Based Access Control (RBAC).
 
 ### **1. The Lifecycle**
 1. **Organization Creation**: An Admin registers *without* an invite code. The system automatically creates a new `organizationId` and a unique `inviteCode` for their workspace.

@@ -20,7 +20,7 @@ async function bootstrap() {
 
   // Setup Swagger Documentation
   const config = new DocumentBuilder()
-    .setTitle('Zorvyn API')
+    .setTitle('CashFlowOS API')
     .setDescription('The enterprise-grade financial management API documentation. Supports record tracking, dashboard aggregations, and RBAC security.')
     .setVersion('1.0')
     .addBearerAuth()

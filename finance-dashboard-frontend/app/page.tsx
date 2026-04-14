@@ -53,7 +53,7 @@ export default function LandingPage() {
             <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg flex items-center justify-center">
               <div className="w-2.5 h-2.5 bg-white rounded-full animate-pulse"></div>
             </div>
-            <span className="text-sm font-black tracking-tight uppercase">Zorvyn</span>
+            <span className="text-sm font-black tracking-tight uppercase">CashFlowOS</span>
           </div>
           <div className="flex items-center gap-6">
             <Link href="/login" className="text-[11px] font-black uppercase tracking-widest text-[#8E8E93] hover:text-indigo-600 transition-colors">SignIn</Link>

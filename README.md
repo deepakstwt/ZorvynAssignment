@@ -1,4 +1,4 @@
-# Zorvyn: Modern Financial Management System
+# CashFlowOS: Modern Financial Management System
 
 [![Aesthetics](https://img.shields.io/badge/Aesthetics-Premium-blueviolet)](#)
 [![Stack](https://img.shields.io/badge/Stack-Next.js%20|%20NestJS%20|%20MongoDB-blue)](#)
@@ -11,9 +11,9 @@ A high-fidelity, enterprise-grade financial dashboard designed for real-time tra
 
 ## 🌍 Live Deployment
 
-Experience the full-stack Zorvyn ecosystem in production:
-- 🚀 **[Zorvyn Dashboard (Live)](https://zorvyn-assignment-black.vercel.app)**
-- 📡 **[Zorvyn API Docs (Swagger)](https://zorvynassignment-1z56.onrender.com/api)**
+Experience the full-stack CashFlowOS ecosystem in production:
+- 🚀 **[CashFlowOS Dashboard (Live)](https://zorvyn-assignment-black.vercel.app)**
+- 📡 **[CashFlowOS API Docs (Swagger)](https://zorvynassignment-1z56.onrender.com/api)**
 - 🛠 **Backend Service**: [https://zorvynassignment-1z56.onrender.com](https://zorvynassignment-1z56.onrender.com)
 
 ### 🏁 Test Credentials
@@ -103,7 +103,7 @@ A full interactive API reference is available via Swagger. Visit the live produc
 
 ## 👥 Invite-Based Onboarding & RBAC
 
-Zorvyn utilizes a secure, organization-centric onboarding flow governed by Role-Based Access Control (RBAC).
+CashFlowOS utilizes a secure, organization-centric onboarding flow governed by Role-Based Access Control (RBAC).
 
 ### **1. The Lifecycle**
 1. **Organization Creation**: An Admin registers *without* an invite code. The system automatically creates a new `organizationId` and a unique `inviteCode` for their workspace.

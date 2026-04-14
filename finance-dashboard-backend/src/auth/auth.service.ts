@@ -49,7 +49,7 @@ export class AuthService {
 
             // New Organization - This user is the Admin/Owner
             organizationId = new Types.ObjectId();
-            inviteCode = `ZORVYN-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+            inviteCode = `CASHFLOWOS-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
             role = UserRole.ADMIN; 
         }
 
