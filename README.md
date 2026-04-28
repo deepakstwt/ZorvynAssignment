@@ -12,9 +12,9 @@ A high-fidelity, enterprise-grade financial dashboard designed for real-time tra
 ## 🌍 Live Deployment
 
 Experience the full-stack CashFlowOS ecosystem in production:
-- 🚀 **[CashFlowOS Dashboard (Live)](https://zorvyn-assignment-black.vercel.app)**
-- 📡 **[CashFlowOS API Docs (Swagger)](https://zorvynassignment-1z56.onrender.com/api)**
-- 🛠 **Backend Service**: [https://zorvynassignment-1z56.onrender.com](https://zorvynassignment-1z56.onrender.com)
+- 🚀 **[CashFlowOS Dashboard (Live)](https://cashflow-os-final.vercel.app)**
+- 📡 **[CashFlowOS API Docs (Swagger)](https://cashflow-backend-final.onrender.com/api)**
+- 🛠 **Backend Service**: [https://zorvynassignment-1z56.onrender.com](https://cashflow-backend-final.onrender.com)
 
 ### 🏁 Test Credentials
 You can use the following pre-registered user to test the dashboard immediately:
