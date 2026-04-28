@@ -15,7 +15,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
                 <span className="text-[11px] font-black text-slate-800 uppercase tracking-tighter">{entry.name}</span>
               </div>
               <span className="text-[13px] font-black tabular-nums" style={{ color: entry.color }}>
-                ₹{entry.value.toLocaleString('en-IN', { minimumFractionDigits: 0 })}
+                ${entry.value.toLocaleString('en-US', { minimumFractionDigits: 0 })}
               </span>
             </div>
           ))}
@@ -68,7 +68,7 @@ export default function MonthlyTrendsChart({ data }: { data: any[] }) {
           axisLine={false} 
           tickLine={false} 
           tick={{ fill: '#94a3b8', fontSize: 9, fontWeight: 900 }}
-          tickFormatter={(val) => `₹${val >= 1000 ? (val/1000).toFixed(0)+'k' : val}`}
+          tickFormatter={(val) => `$${val >= 1000 ? (val/1000).toFixed(0)+'k' : val}`}
         />
         <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#000000', strokeWidth: 1, strokeDasharray: '4 4' }} />
         <Area 

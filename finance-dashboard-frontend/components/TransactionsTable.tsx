@@ -199,7 +199,7 @@ export default function TransactionsTable({
                   <p className="text-[10px] font-bold text-slate-500 max-w-[150px] truncate">{t.notes || '—'}</p>
                 </td>
                 <td className={`px-8 py-5 text-right text-xs font-black tracking-tight ${t.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
-                  {t.type === 'income' ? '+' : '-'}₹{t.amount.toLocaleString('en-IN')}
+                  {t.type === 'income' ? '+' : '-'}${t.amount.toLocaleString('en-US')}
                 </td>
                 {userRole?.toLowerCase() === 'admin' && !showViewAll && (
                   <td className="px-8 py-5 text-right">
@@ -238,7 +238,7 @@ export default function TransactionsTable({
                 </div>
               </div>
               <p className={`text-sm font-black tracking-tighter ${t.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
-                {t.type === 'income' ? '+' : '-'}₹{t.amount.toLocaleString('en-IN')}
+                {t.type === 'income' ? '+' : '-'}${t.amount.toLocaleString('en-US')}
               </p>
             </div>
             

@@ -25,7 +25,7 @@ const CustomTooltip = ({ active, payload }: any) => {
           {payload[0].name}
         </p>
         <p className="text-sm font-black text-slate-900 tracking-tighter leading-none tabular-nums">
-          ₹{payload[0].value.toLocaleString("en-IN")}
+          ${payload[0].value.toLocaleString("en-US")}
         </p>
       </div>
     );
@@ -56,7 +56,7 @@ export default function CategoryPieChart({ data }: { data: any[] }) {
             Exposure
           </p>
           <h2 className="text-xl md:text-2xl lg:text-4xl font-black text-slate-900 tracking-tighter tabular-nums leading-none">
-            ₹{total.toLocaleString("en-IN")}
+            ${total.toLocaleString("en-US")}
           </h2>
         </div>
         <ResponsiveContainer width="100%" height="100%">

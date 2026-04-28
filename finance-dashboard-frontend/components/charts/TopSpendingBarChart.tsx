@@ -43,7 +43,7 @@ export default function TopSpendingBarChart({ data }: TopSpendingBarChartProps) 
             {payload[0].payload.category}
           </p>
           <p className="text-sm font-black text-slate-900 tracking-tighter">
-            ₹{payload[0].value.toLocaleString('en-IN')}
+            ${payload[0].value.toLocaleString('en-US')}
           </p>
         </div>
       );

@@ -154,7 +154,7 @@ export default function LedgerPage() {
                   <div key={idx} className={`flex-1 flex items-center justify-between px-6 py-4 md:py-3 transition-colors hover:bg-slate-50/50 rounded-xl group ${idx < 2 ? 'md:border-r md:border-slate-50' : ''}`}>
                     <div className="space-y-0.5 md:space-y-0">
                       <p className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 group-hover:text-slate-600 leading-none">{m.label}</p>
-                      <p className={`text-lg md:text-xl font-black ${m.color} tracking-tighter`}>₹{m.value.toLocaleString('en-IN', { minimumFractionDigits: 0 })}</p>
+                      <p className={`text-lg md:text-xl font-black ${m.color} tracking-tighter`}>${m.value.toLocaleString('en-US', { minimumFractionDigits: 0 })}</p>
                     </div>
                     <div className={`w-8 h-8 rounded-lg bg-white shadow-sm border border-slate-50 flex items-center justify-center ${m.color} group-hover:rotate-12 transition-transform`}>
                       {m.icon}

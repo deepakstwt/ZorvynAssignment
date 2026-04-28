@@ -124,7 +124,7 @@ export default function AddTransactionModal({ isOpen, onClose, onSuccess, initia
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">Amount (₹)</label>
+              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">Amount ($)</label>
               <input
                 type="number"
                 step="0.01"
@@ -133,7 +133,7 @@ export default function AddTransactionModal({ isOpen, onClose, onSuccess, initia
                 value={formData.amount}
                 onChange={(e) => setFormData({...formData, amount: e.target.value})}
                 className="w-full px-5 py-4 border border-slate-100 bg-slate-50/50 rounded-2xl focus:bg-white focus:ring-2 focus:ring-black focus:border-transparent outline-none font-bold text-slate-900 transition-all placeholder-slate-300"
-                placeholder="₹ 0.00"
+                placeholder="$ 0.00"
               />
             </div>
           </div>

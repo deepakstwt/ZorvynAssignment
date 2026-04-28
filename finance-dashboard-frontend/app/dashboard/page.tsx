@@ -177,7 +177,7 @@ export default function DashboardPage() {
                      </div>
                    </div>
                    <h3 className={`text-2xl md:text-3xl font-black tabular-nums tracking-tighter leading-none ${card.color}`}>
-                     ₹{card.amount.toLocaleString('en-IN', { minimumFractionDigits: 0 })}
+                     ${card.amount.toLocaleString('en-US', { minimumFractionDigits: 0 })}
                    </h3>
                 </div>
               ))}
