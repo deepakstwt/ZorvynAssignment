@@ -34,12 +34,14 @@ const CustomTooltip = ({ active, payload }: any) => {
 };
 
 export default function CategoryPieChart({ data }: { data: any[] }) {
-  if (!data || data.length === 0) {
+  if (!data || data.length === 0 || data.every(d => d.total === 0)) {
     return (
-      <div className="h-full w-full flex items-center justify-center bg-slate-50/50 rounded-[3rem] border border-dashed border-slate-200">
-        <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-          No active data detected
-        </span>
+      <div className="h-full w-full flex flex-col items-center justify-center text-slate-300 bg-slate-50/20 rounded-[3rem] border border-dashed border-slate-200 p-12 animate-in fade-in duration-700">
+        <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-xl mb-6 text-slate-200">
+           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+        </div>
+        <p className="text-[10px] uppercase tracking-[0.3em] font-black text-slate-400">Sector Analysis Unavailable</p>
+        <p className="text-[12px] font-bold text-slate-400/70 mt-2">Log transactions to visualize category concentration.</p>
       </div>
     );
   }

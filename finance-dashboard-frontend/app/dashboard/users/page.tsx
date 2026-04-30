@@ -91,6 +91,10 @@ export default function UsersPage() {
                         <div className="flex flex-wrap justify-center gap-3">
                           <button 
                             onClick={async () => {
+                              if (!inviteCode) {
+                                toast.error('Invite code still loading. Please wait.');
+                                return;
+                              }
                               try {
                                 const link = `${window.location.origin}/register?code=${inviteCode}&role=analyst`;
                                 await navigator.clipboard.writeText(link);
@@ -100,13 +104,18 @@ export default function UsersPage() {
                                 toast.error('Failed to copy link.');
                               }
                             }}
-                            className="px-6 py-3.5 bg-white border border-slate-200 text-slate-900 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:border-indigo-600 hover:text-indigo-600 shadow-sm transition-all active:scale-95 flex items-center gap-2"
+                            disabled={!inviteCode}
+                            className={`px-6 py-3.5 bg-white border border-slate-200 text-slate-900 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:border-indigo-600 hover:text-indigo-600 shadow-sm transition-all active:scale-95 flex items-center gap-2 ${!inviteCode ? 'opacity-50 cursor-not-allowed' : ''}`}
                           >
                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="17" y1="11" x2="23" y2="11"></line></svg>
                              Invite Analyst
                           </button>
                           <button 
                             onClick={async () => {
+                              if (!inviteCode) {
+                                toast.error('Invite code still loading. Please wait.');
+                                return;
+                              }
                               try {
                                 const link = `${window.location.origin}/register?code=${inviteCode}&role=viewer`;
                                 await navigator.clipboard.writeText(link);
@@ -116,7 +125,8 @@ export default function UsersPage() {
                                 toast.error('Failed to copy link.');
                               }
                             }}
-                            className="px-6 py-3.5 bg-white border border-slate-200 text-slate-900 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:border-indigo-600 hover:text-indigo-600 shadow-sm transition-all active:scale-95 flex items-center gap-2"
+                            disabled={!inviteCode}
+                            className={`px-6 py-3.5 bg-white border border-slate-200 text-slate-900 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:border-indigo-600 hover:text-indigo-600 shadow-sm transition-all active:scale-95 flex items-center gap-2 ${!inviteCode ? 'opacity-50 cursor-not-allowed' : ''}`}
                           >
                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><path d="M23 11a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"></path></svg>
                              Invite Viewer

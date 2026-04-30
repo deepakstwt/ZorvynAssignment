@@ -10,13 +10,14 @@ function RegisterPageContent() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [role, setRole] = useState('admin');
+  const [role, setRole] = useState<string | null>(null);
   const [inviteCode, setInviteCode] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [isCodeLocked, setIsCodeLocked] = useState(false);
   const [isRoleLocked, setIsRoleLocked] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
+  const [paramsLoaded, setParamsLoaded] = useState(false);
   
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -27,6 +28,7 @@ function RegisterPageContent() {
       if (token) {
         try {
           await api.get('/auth/profile');
+          // If already logged in, redirect to dashboard
           router.push('/dashboard');
           return;
         } catch (err) {
@@ -46,9 +48,9 @@ function RegisterPageContent() {
       setInviteCode(codeFromUrl);
       setIsCodeLocked(true);
       
-      // If code is present, default to viewer unless role is specified
-      if (roleFromUrl && ['viewer', 'analyst'].includes(roleFromUrl.toLowerCase())) {
-        setRole(roleFromUrl.toLowerCase());
+      const normalizedRole = roleFromUrl?.toLowerCase();
+      if (normalizedRole && ['viewer', 'analyst'].includes(normalizedRole)) {
+        setRole(normalizedRole);
         setIsRoleLocked(true);
       } else {
         setRole('viewer');
@@ -56,18 +58,19 @@ function RegisterPageContent() {
     } else {
       setRole('admin');
     }
+    setParamsLoaded(true);
   }, [searchParams]);
 
-  // Sync role when inviteCode changes manually
+  // Sync role logic - only for manual entry
   useEffect(() => {
-    if (!isRoleLocked) {
-      if (inviteCode && role === 'admin') {
+    if (paramsLoaded && !isRoleLocked) {
+      if (inviteCode && (role === 'admin' || !role)) {
         setRole('viewer');
       } else if (!inviteCode && role !== 'admin') {
         setRole('admin');
       }
     }
-  }, [inviteCode, isRoleLocked, role]);
+  }, [inviteCode, isRoleLocked, role, paramsLoaded]);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,12 +123,14 @@ function RegisterPageContent() {
       `}} />
       <div className="absolute inset-0 z-0 bg-grid justify-center [mask-image:radial-gradient(ellipse_at_top,black,transparent_80%)]"></div>
       
-      {checkingSession ? (
+      {!paramsLoaded || checkingSession ? (
         <div className="relative z-10 flex flex-col items-center justify-center space-y-4 font-sans animate-in fade-in duration-500">
           <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center shadow-md">
              <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
           </div>
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Verifying Session...</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+            {checkingSession ? 'Verifying Session...' : 'Preparing Invitation...'}
+          </p>
         </div>
       ) : (
         <>
@@ -135,11 +140,11 @@ function RegisterPageContent() {
                 <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
               </div>
             </div>
-            <h2 className="mt-2 text-center text-3xl font-extrabold tracking-tight text-gray-900">
-              Create Account
+            <h2 className="mt-2 text-center text-3xl font-extrabold tracking-tight text-gray-900 uppercase">
+              {inviteCode ? 'Join Workspace' : 'Create Account'}
             </h2>
             <p className="mt-2 text-center text-sm font-medium text-gray-500">
-              Join the platform and launch your workspace.
+              {inviteCode ? `You've been invited to join team ${inviteCode}` : 'Launch your own financial workspace.'}
             </p>
           </div>
 

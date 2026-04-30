@@ -18,6 +18,7 @@ interface TransactionsTableProps {
   refreshTrigger?: number;
   onUpdate?: () => void;
   onEdit?: (transaction: Transaction) => void;
+  onAdd?: () => void;
   userRole?: string;
   startDate?: string;
   endDate?: string;
@@ -32,6 +33,7 @@ export default function TransactionsTable({
   refreshTrigger, 
   onUpdate, 
   onEdit, 
+  onAdd,
   userRole, 
   startDate, 
   endDate,
@@ -271,11 +273,24 @@ export default function TransactionsTable({
 
       
       {filteredAndSortedTransactions.length === 0 && (
-        <div className="py-16 text-center space-y-3">
-          <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mx-auto">
-             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-300"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <div className="py-24 text-center space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-700">
+          <div className="w-16 h-16 bg-slate-50 rounded-[1.5rem] flex items-center justify-center mx-auto shadow-sm border border-slate-100">
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-300"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           </div>
-          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Zero matching sequences found</p>
+          <div className="space-y-1">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Archive Manifest Empty</p>
+            <p className="text-[11px] font-bold text-slate-400">No transactions match your current filter parameters.</p>
+          </div>
+          {!searchQuery && filterType === 'All Types' && filterCategory === 'All Categories' && (
+            <div className="pt-4">
+               <button 
+                 onClick={onAdd}
+                 className="px-5 py-2 bg-slate-900 text-white rounded-xl text-[9px] font-black uppercase tracking-widest cursor-pointer hover:bg-indigo-600 transition-all shadow-lg shadow-slate-900/10 active:scale-95"
+               >
+                 Initialize Ledger
+               </button>
+            </div>
+          )}
         </div>
       )}
     </div>

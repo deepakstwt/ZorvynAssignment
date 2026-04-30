@@ -25,24 +25,31 @@ export class AuthService {
         let inviteCode: string;
         let role: UserRole;
 
-        if (registerDto.inviteCode) {
+        const providedInviteCode = registerDto.inviteCode?.trim();
+
+        if (providedInviteCode) {
             // SECURITY: Enforcing role assignment strictly from invite context
             // Blocking any attempt to assign ADMIN role during invite-based signup
             if (registerDto.role === UserRole.ADMIN) {
                 throw new ForbiddenException('Admin role cannot be assigned via invite link to prevent privilege escalation.');
             }
 
-            const organizer = await this.usersService.findByInviteCode(registerDto.inviteCode);
+            // Case-insensitive lookup for the organization's creator/admin
+            const organizer = await this.userModel.findOne({ 
+                inviteCode: { $regex: new RegExp(`^${providedInviteCode}$`, 'i') } 
+            }).exec();
+
             if (!organizer) {
-                throw new BadRequestException('Invalid invite code. Please check with your team admin.');
+                throw new BadRequestException('Invalid or expired invite code. Please check with your team admin.');
             }
 
-            // Using role from invite link (query param) - Defaulting to VIEWER if not provided
+            // Using role from invite link - Defaulting to VIEWER if not provided or invalid
             organizationId = organizer.organizationId;
-            inviteCode = organizer.inviteCode; // Inherit organization's invite code
+            inviteCode = organizer.inviteCode; // Use the canonical code from DB
             role = (registerDto.role as UserRole) || UserRole.VIEWER;
         } else {
             // COMPLIANCE: Only Admin role can start a new organization
+            // If someone tries to join as a viewer/analyst without a code, we block it
             if (registerDto.role && registerDto.role !== UserRole.ADMIN) {
                 throw new BadRequestException('Viewer and Analyst roles require a Team Invite Code to join an existing organization.');
             }

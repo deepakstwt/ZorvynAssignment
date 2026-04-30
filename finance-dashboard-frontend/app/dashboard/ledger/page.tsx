@@ -238,6 +238,7 @@ export default function LedgerPage() {
                     setEditingTransaction(t);
                     setIsModalOpen(true);
                   }}
+                  onAdd={() => setIsModalOpen(true)}
                   userRole={userRole}
                   startDate=""
                   endDate=""

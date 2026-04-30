@@ -262,11 +262,14 @@ export default function UsersTable() {
         </div>
       )}
       {users.length === 0 && !loading && (
-        <div className="py-20 text-center space-y-3">
-          <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
+        <div className="py-24 text-center space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-700">
+          <div className="w-16 h-16 bg-slate-50 rounded-[1.5rem] flex items-center justify-center mx-auto shadow-sm border border-slate-100">
              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-slate-300"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 00-3-3.87"></path><path d="M16 3.13a4 4 0 010 7.75"></path></svg>
           </div>
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">No other team members found</p>
+          <div className="space-y-1">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Personnel Roster Empty</p>
+            <p className="text-[11px] font-bold text-slate-400">Invite members to your workspace to see them listed here.</p>
+          </div>
         </div>
       )}
       

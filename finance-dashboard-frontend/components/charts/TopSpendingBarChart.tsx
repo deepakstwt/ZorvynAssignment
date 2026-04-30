@@ -30,6 +30,20 @@ const COLORS = [
 ];
 
 export default function TopSpendingBarChart({ data }: TopSpendingBarChartProps) {
+  const isEmpty = !data || data.length === 0 || data.every(d => d.total === 0);
+
+  if (isEmpty) {
+    return (
+      <div className="h-full w-full flex flex-col items-center justify-center text-slate-300 bg-slate-50/20 rounded-[2.5rem] border border-dashed border-slate-100 p-8 animate-in fade-in duration-700">
+        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md mb-4 text-slate-200">
+           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10"></path><path d="M18 20V4"></path><path d="M6 20v-4"></path></svg>
+        </div>
+        <p className="text-[9px] uppercase tracking-[0.25em] font-black text-slate-400">Distribution Void</p>
+        <p className="text-[10px] font-bold text-slate-400/60 mt-1">Allocation data will appear here.</p>
+      </div>
+    );
+  }
+
   // Sort by total descending and take top 5
   const topData = [...data]
     .sort((a, b) => b.total - a.total)
